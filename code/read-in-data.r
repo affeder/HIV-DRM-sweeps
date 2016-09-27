@@ -171,7 +171,7 @@ dat$PIr.effect <- PIr.effect
 ##############################################
 
 #Concert the efficacy information to a usable format
-tmp <- read.table("~/Dropbox/HIV_softsweeps/effic3.csv", sep = ",", fill = T, header = T, stringsAsFactors = F)
+tmp <- read.table("../dat/effic3.csv", sep = ",", fill = T, header = T, stringsAsFactors = F)
 names(tmp) <- c("Treatment.Name", "Study.name", "succprop", "N", "Weeks", "VL.limit")
 
 allnames <- unique(tmp$Treatment.Name)
@@ -201,14 +201,9 @@ drugnames <- drugnames[!is.na(percentfail)]
 percentfail <- percentfail[!is.na(percentfail)]
 
 
-                                        #table(as.numeric(dat$PRFirstAA) > 1)
 relInds <- c()
 for(i in 1:length(refs.filt)){
     relInds <- c(relInds, which(dat$Regimen == refs.filt[i]))
 }
 
-table(as.numeric(dat[relInds,'PRFirstAA']) > 1, useNA = "no")
-dat$DRMnum
 
-tmpdat <- read.table("../../code/dat/nclonal.dat.txt", stringsAsFactors = FALSE, header = TRUE, sep = "\t")
-table(tmpdat$DRMnum == dat$DRMnum)
