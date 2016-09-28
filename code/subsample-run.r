@@ -174,7 +174,7 @@ colnames(resamp.dat.glmm.1995.lte4) <- rownames(resamp.glmm.1995.lte4[[1]]$Regim
 
 resamp.dat.glmm.1995.lte4
 #Store the random effects coefficients (so it can be graphed without having to rerun everything)
-write.table(resamp.dat.glmm.1995.lte4, "../tmp/GLMM.1995.lte4.randeffs-old-3.txt", row.names = FALSE, col.names  = TRUE , quote = FALSE)
+write.table(resamp.dat.glmm.1995.lte4, "../tmp/GLMM.1995.lte4.randeffs.txt", row.names = FALSE, col.names  = TRUE , quote = FALSE)
 
 #Set up a matrix that will keep track of all the fixed effects
 fe.dat.glmm.1995.lte4 <- matrix(data = NA, nrow = length(resamp.glmm.1995.lte4), ncol = 3)
@@ -184,7 +184,7 @@ for(i in 1:length(resamp.glmm.1995.lte4)){
 
 
 #Write the fixed effects
-write.table(fe.dat.glmm.1995.lte4, "../tmp/GLMM.1995.lte4.fixedeffs-old-3.txt",  row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(fe.dat.glmm.1995.lte4, "../tmp/GLMM.1995.lte4.fixedeffs.txt",  row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 
 
@@ -276,7 +276,7 @@ colnames(coefs.glm.1995.lte4.for.ttest) <- names(coefs.glm.1995.lte4[[1]])
 print(Sys.time()-strt)
 stopCluster(cl)
 
-write.table(coefs.glm.1995.lte4.for.ttest, "../tmp/GLM.1995.lte4.fixedeffs-old-3.txt", row.names = FALSE, col.names = TRUE, quote = FALSE)
+write.table(coefs.glm.1995.lte4.for.ttest, "../tmp/GLM.1995.lte4.fixedeffs.txt", row.names = FALSE, col.names = TRUE, quote = FALSE)
 
 
 
@@ -338,7 +338,7 @@ colnames(resamp.dat.glmm.1995.notrunc) <- plotnames
 #}
 
 #Store the random effects coefficients (so it can be graphed without having to rerun everything)
-write.table(resamp.dat.glmm.1995.notrunc, "../tmp/GLMM.1995.notrunc.randeffs-old-3.txt", row.names = FALSE, col.names  = TRUE , quote = FALSE)
+write.table(resamp.dat.glmm.1995.notrunc, "../tmp/GLMM.1995.notrunc.randeffs.txt", row.names = FALSE, col.names  = TRUE , quote = FALSE)
 
 #Set up a matrix that will keep track of all the fixed effects
 fe.dat.glmm.1995.notrunc <- matrix(data = NA, nrow = length(resamp.glmm.1995.notrunc), ncol = 3)
@@ -346,7 +346,7 @@ for(i in 1:length(resamp.glmm.1995.notrunc)){
     fe.dat.glmm.1995.notrunc[i, ] <- c(resamp.glmm.1995.notrunc[[i]]$'(Intercept)', resamp.glmm.1995.notrunc[[i]]$DRMnum, resamp.glmm.1995.notrunc[[i]]$lens)
 }
 
-write.table(fe.dat.glmm.1995.notrunc, "../tmp/GLMM.1995.notrunc.fixedeffs-old-3.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(fe.dat.glmm.1995.notrunc, "../tmp/GLMM.1995.notrunc.fixedeffs.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 
 #1995+
@@ -429,7 +429,7 @@ for(i in 1:iters){
 colnames(coefs.glm.1995.notrunc.for.ttest) <- names(coefs.glm.1995.notrunc[[1]])
 
 
-write.table(coefs.glm.1995.notrunc.for.ttest, "../tmp/GLM.1995.notrunc.fixedeffs-old-3.txt", row.names = FALSE, col.names = TRUE, quote = FALSE)
+write.table(coefs.glm.1995.notrunc.for.ttest, "../tmp/GLM.1995.notrunc.fixedeffs.txt", row.names = FALSE, col.names = TRUE, quote = FALSE)
 
 
 ######################################
@@ -480,8 +480,7 @@ plotnames <- rownames(resamp.glmm.all.lte4[[1]]$Regimen)
 colnames(resamp.dat.glmm.all.lte4) <- plotnames
 
                                         #Store the random effects coefficients (so it can be graphed without having to rerun everything)
-#write.table(resamp.dat.glmm.all.lte4, "../tmp/GLMM.all.lte4.randeffs.txt", row.names = FALSE, col.names  = TRUE , quote = FALSE)
-write.table(resamp.dat.glmm.all.lte4, "../tmp/GLMM.all.lte4.randeffs-old-3.txt", row.names = FALSE, col.names  = TRUE , quote = FALSE)
+write.table(resamp.dat.glmm.all.lte4, "../tmp/GLMM.all.lte4.randeffs.txt", row.names = FALSE, col.names  = TRUE , quote = FALSE)
 
 #Set up a matrix that will keep track of all the fixed effects
 fe.dat.glmm.all.lte4 <- matrix(data = NA, nrow = length(resamp.glmm.all.lte4), ncol = 3)
@@ -490,8 +489,8 @@ for(i in 1:length(resamp.glmm.all.lte4)){
 }
 
 #Write the fixed effects
-#write.table(fe.dat.glmm.all.lte4, "../tmp/GLMM.all.lte4.fixedeffs.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
-write.table(fe.dat.glmm.all.lte4, "../tmp/GLMM.all.lte4.fixedeffs-old-3.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(fe.dat.glmm.all.lte4, "../tmp/GLMM.all.lte4.fixedeffs.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
+
 
 #ALL DATA
 #TRUNCATED TO 4 DRMs
@@ -575,7 +574,7 @@ colnames(coefs.glm.all.lte4.for.ttest) <- names(coefs.glm.all.lte4[[1]])
 print(Sys.time()-strt)
 stopCluster(cl)
 
-write.table(coefs.glm.all.lte4.for.ttest, "../tmp/GLM.all.lte4.fixedeffs-old-3.txt", row.names = FALSE, col.names = TRUE, quote = FALSE)
+write.table(coefs.glm.all.lte4.for.ttest, "../tmp/GLM.all.lte4.fixedeffs.txt", row.names = FALSE, col.names = TRUE, quote = FALSE)
 
 
 
