@@ -38,7 +38,7 @@ for(i in 1:6){
 dir <- rep(1, length(coder))
 dir[ coder == 3 ] <- 1.3
 dir[coder == 4] <- 1.65
-dir[coder == 5] <- 1.3
+dir[coder == 5] <- 2 
 dir[coder == 6] <- 1.4
 dir[coder == 1] <- .85
 
@@ -84,9 +84,9 @@ lowerlim <- -2.2
 upperlim = 2.5
 
 adj <- rep(1, length(refs.filt))
-adj[coder == 1] <- -1.1
+adj[coder == 1] <- -1
 adj[coder == 2] <- .4
-adj[coder == 3] <-  .5
+adj[coder == 3] <-  .65
 adj[coder == 4] <- .7
 adj[coder == 5] <- -1.5
 adj[coder == 6] <- .6
@@ -110,7 +110,7 @@ for(k in 1:4){
 axis(1, at = 1:4, labels = c("1NRTI", "2NRTI", "3NRTI", " \n2NRTI+\nNNRTI"))
 axis(2:4)
 #text(.55, .0092, "A", cex = 2.5)
-text(.55, 1.95, "A", cex = 2)
+text(.55, 2.35, "A", cex = 2)
 box()
 
 
@@ -138,7 +138,7 @@ axis(1, at = 5:6, labels = c("2NRTI+PI", "2NRTI+PI/r"))
 #axis(3:4)
 
 #text(4.55, .0092, "B", cex = 2.5)
-text(4.55, 1.95, "B", cex = 2)
+text(4.55, 2.35, "B", cex = 2)
 box()
 
 sum(dat$IsolateYear > 1994)
@@ -277,13 +277,4 @@ text(c(1.5, 15, 36.5), rep(-1.8, 3), c("10", "100", "500"), cex = .75)
 polygon(c(42, -20, -20, 42), c(-3, -3, -1.4, -1.4))
 
 dev.off()
-
-
-coef(lm(rand.effs[matched.effects] ~ percentfail))
-.98/.016
-#A ten percent increase in treatment efficacy = .2 amb reads lost with each additional DRM
-#these will need to be updated slightly once we run the rest of our random effects 
-
-summary(lm(ambnum ~ IsolateYear, data = dat[dat$DRMnum == 0, ]))
-
 

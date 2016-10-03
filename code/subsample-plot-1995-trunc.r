@@ -94,7 +94,7 @@ for(i in 1:length(drugnames)){
     }
 }
 #abline(h = c(0, 100))
-text(0.5, 92, "A", cex = 2.5)
+text(0.55, 94, "A", cex = 2.5)
 box()
 
 
@@ -120,7 +120,7 @@ drugnames[drugnames == "3TC+D4T+LPV/r"] <- "3TC+D4T+LPV"
 
 
 
-text(1.55, 92, "B", cex = 2.5)
+text(1.55, 94, "B", cex = 2.5)
 box()
 
 
@@ -197,7 +197,7 @@ glmm.1995.ordered.intervals <- glmm.intervals[,code.order.convert]
 par(mar = c(4,4,.5,.5))
 
 lowerlim <- -2.2
-upperlim = 2.5
+upperlim = 2.3
 
 adj <- rep(1, length(refs.filt))
 adj[coder == 1] <- -.7
@@ -226,7 +226,7 @@ for(k in 1:4){
 axis(1, at = 1:4, labels = c("1NRTI", "2NRTI", "3NRTI", " \n2NRTI+\nNNRTI"))
 axis(2:4)
 #text(.55, .0092, "A", cex = 2.5)
-text(.55, 1.95, "C", cex = 2.5)
+text(.55, 2.2, "C", cex = 2.5)
 box()
 
 
@@ -257,7 +257,7 @@ sort(names(glmm.1995.ordered.means))
 axis(1, at = 5:6, labels = c("2NRTI+PI", "2NRTI+PI/r"))
 
 #text(4.55, .0092, "B", cex = 2.5)
-text(4.55, 1.95, "D", cex = 2.5)
+text(4.55, 2.2, "D", cex = 2.5)
 box()
 
 sum(dat$IsolateYear > 1994)
@@ -386,7 +386,7 @@ rel.col[rel.col == 6] <- newPal[5]
 pdf("../figures/F4-1995-trunc.pdf", width =6, height =5)
 #pdf("~/Desktop/elife-figs/new/F4-S3-1995-trunc.pdf", width =6, height =5)
 par(mar = c(4,4,1, 1))
-plot(percentfail, rand.effs[matched.effects], xlab = "Percentage of patients with virologic suppression after 48 weeks" , ylab =  expression(paste("Change in diversity accompanying each DRM (", Delta, "DRM)", sep = "")), type = "n", xlim = c(0, 105), ylim = c(-2, upperlim))
+plot(percentfail, rand.effs[matched.effects], xlab = "Percentage of patients with virologic suppression after 48 weeks" , ylab =  expression(paste("Change in diversity accompanying each DRM (", Delta, "DRM)", sep = "")), type = "n", xlim = c(0, 105), ylim = c(-2, 2.2))
 #abline(lm(rand.effs[matched.effects] ~ percentfail))
 rands.perc <- rand.effs[matched.effects]
 interval <- apply(allfits, 2, quantile, c(.025, .975), na.rm = TRUE)
@@ -416,23 +416,6 @@ text(c(1.5, 15, 36.5), rep(-1.8, 3), c("10", "100", "500"), cex = .75)
 polygon(c(42, -20, -20, 42), c(-3, -3, -1.4, -1.4))
 dev.off()
 
-coef(lm(rand.effs[matched.effects] ~ percentfail))
-
-#A ten percent increase in treatment efficacy = .2 amb reads lost with each additional DRM
-                                        #these will need to be updated slightly once we run the rest of our random effects
-
- 1.03432523/-0.02041987
 
 
-summary(lm(ambnum ~ IsolateYear, data = dat[dat$DRMnum == 0, ]))
-mean(allfits[,51])
-mean(allfits[,81])
 
-(1.03432523 + 50* -0.02041987)*3
-(1.03432523 + 80* -0.02041987)*3
-
--1.797793/5.360
-mean(dat$ambnum)
-rand.effs[matched.effects] #coefficient = for each increase of a DRM, how many ambiguous reads fewer are you expected to see?
-
-apply(allfits, 1, quantile, c(.025, .975))

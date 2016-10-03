@@ -84,8 +84,8 @@ glmm.1995.ordered.intervals <- glmm.intervals[,code.order.convert]
 #layout(matrix(1:2, nrow = 1))
 par(mar = c(4,4,.5,.5))
 
-lowerlim <- -2.2
-upperlim = 2.5
+lowerlim <- -2
+upperlim = 2.1
 
 adj <- rep(1, length(refs.filt))
 adj[coder == 1] <- -.7
@@ -244,9 +244,8 @@ rel.col[rel.col == 6] <- newPal[5]
 
 
 pdf("../figures/F4-S3-1995-notrunc.pdf", width =6, height =5)
-#pdf("~/Desktop/elife-figs/new/F4-S3-1995-notrunc.pdf", width =6, height =5)
 par(mar = c(4,4,1, 1))
-plot(percentfail, rand.effs[matched.effects], xlab = "Percentage of patients with virologic suppression after 48 weeks" , ylab =  expression(paste("Change in diversity accompanying each DRM (", Delta, "DRM)", sep = "")), type = "n", xlim = c(0, 105), ylim = c(-2, upperlim))
+plot(percentfail, rand.effs[matched.effects], xlab = "Percentage of patients with virologic suppression after 48 weeks" , ylab =  expression(paste("Change in diversity accompanying each DRM (", Delta, "DRM)", sep = "")), type = "n", xlim = c(0, 105), ylim = c(-1.8, 2.1))
 #abline(lm(rand.effs[matched.effects] ~ percentfail))
 rands.perc <- rand.effs[matched.effects]
 interval <- apply(allfits, 2, quantile, c(.025, .975), na.rm = TRUE)
@@ -255,36 +254,30 @@ abline(h = 0, lty = "dashed", col = 'grey')
 for(ind in order(treatsize, decreasing = TRUE)){
     points(percentfail[ind], rand.effs[matched.effects][ind], cex = sqrt(treatsize[ind]/10), bg = rel.col[ind], col = "black", pch = 21)
 }
+#These are offsets for the labels
 offset.4 <- rep(.2, length(matched.drugnames))
-offset.4[matched.drugnames == "AZT"] <- .24
+offset.4[matched.drugnames == "AZT"] <- .27
 offset.4[matched.drugnames == "3TC+AZT"] <- .24
 offset.4[matched.drugnames == "3TC+AZT+NVP"] <- -.36
 offset.4[matched.drugnames == "3TC+AZT+NFV"] <- .26
-offset.4[matched.drugnames == "3TC+AZT+EFV"] <- .34
-offset.4[matched.drugnames == "3TC+D4T+NVP"] <- .5
-offset.4[matched.drugnames == "AZT+DDI"] <- .3
+offset.4[matched.drugnames == "3TC+AZT+EFV"] <- .36
+offset.4[matched.drugnames == "3TC+D4T+NVP"] <- .56
+offset.4[matched.drugnames == "AZT+DDI"] <- .32
 offset.4[matched.drugnames == "AZT+DDC"] <- .18
-offset.4[matched.drugnames == "3TC+ABC+EFV"] <- .16
+offset.4[matched.drugnames == "3TC+ABC+EFV"] <- .18
 offset.4[matched.drugnames == "3TC+ABC+AZT"] <- .26
-offset.4[matched.drugnames == "3TC+D4T+IDV"] <- .14
+offset.4[matched.drugnames == "3TC+D4T+IDV"] <- -.16
+offset.4[matched.drugnames == "3TC+AZT+IDV"] <- -.22
 offset.4[matched.drugnames == "D4T+DDI+NFV"] <- -.16
 offset.4[matched.drugnames == "D4T+DDI+EFV"] <- .16
-offset.4[matched.drugnames == "3TC+D4T+EFV"] <- -.46
+offset.4[matched.drugnames == "3TC+D4T+EFV"] <- -.52
 offset.4[matched.drugnames == "3TC+EFV+TDF"] <- -.22
-offset.4[matched.drugnames == "3TC+AZT+LPV"] <- .15
+offset.4[matched.drugnames == "3TC+AZT+LPV"] <- .16
+offset.4[matched.drugnames == "EFV+FTC+TDF"] <- .26
 text(percentfail, rand.effs[matched.effects]-offset.4, matched.drugnames, cex = .5)
 legend("topright", c('1, 2 or 3 NRTI', '2NRTI+NNRTI', '2NRTI+PI', "2NRTI+PI/r"), pch = c(21, 21, 21, 21), ncol = 1, pt.cex = c( 1, 1, 1, 1), col = "black", pt.bg = c( newPal[2], newPal[1], newPal[4], newPal[5]), box.lwd = 0, cex = .75)
-points(c(-2, 9, 27), rep(-1.8,3), pch = c(21, 21, 21), cex = sqrt(c(10, 100, 500)/10), col = "black", bg = "black")
-text(c(1.5, 15, 36.5), rep(-1.8, 3), c("10", "100", "500"), cex = .75)
-polygon(c(42, -20, -20, 42), c(-3, -3, -1.4, -1.4))
+points(c(-2, 9, 27), rep(-1.6,3), pch = c(21, 21, 21), cex = sqrt(c(10, 100, 500)/10), col = "black", bg = "black")
+text(c(1.5, 15, 36.5), rep(-1.6, 3), c("10", "100", "500"), cex = .75)
+polygon(c(42, -20, -20, 42), c(-3, -3, -1.25, -1.25))
 dev.off()
-
-coef(lm(rand.effs[matched.effects] ~ percentfail))
-.98/.016
-
-#A ten percent increase in treatment efficacy = .2 amb reads lost with each additional DRM
-#these will need to be updated slightly once we run the rest of our random effects 
-
-summary(lm(ambnum ~ IsolateYear, data = dat[dat$DRMnum == 0, ]))
-
 

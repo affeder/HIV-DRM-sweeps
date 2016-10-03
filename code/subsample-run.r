@@ -1,14 +1,16 @@
 #Resamp file
+require(vcd)
+require(glmmADMB)
+require(parallel)
+require(doParallel)
 
 
 #####################
 # Read in the data
 #####################
 
-#Taken from resampled.r
 drugnames <- drugnames[order(percentfail)]
 percentfail <- percentfail[order(percentfail)]
-
 
 
 ###################
@@ -23,7 +25,7 @@ for(i in 1:length(years)){
     year.zero.mean[i] <- mean(dat[intersect(zeroclass,which(dat$IsolateYear == years[i])),'ambnum'])
 }
 
-fit2b <- c(-511.25, 0.26)
+
 #Full (i.e., all data, not just 1995+)
 fit2b <- lm(dat[zeroclass, 'ambnum'] ~ poly(dat[zeroclass, 'IsolateYear'], 1, raw=TRUE))$coefficients
 poly2b <- function(year){c(fit2b[1] + fit2b[2]*year )}
@@ -67,7 +69,6 @@ dev.off()
 # Assess model fit
 ###################
 
-require(vcd)
 
 #These are the specific draws that will be plotted
 downsamp.amb <- rpois(length(dat$ambnum), dat$ambnum* down.sample.1995(dat$IsolateYear))
@@ -122,11 +123,9 @@ dev.off()
 #Truncated to 4 DRMs
 #GLMM, note: GLMM code is quite slow to run
 ##############################
-require(glmmADMB)
-require(parallel)
-require(doParallel)
 
-iters<-100
+#Note, in the paper, we run 1000 iterations, but it's quite slow, so we've updated it so that only 20 iterations (parallelized to four cores)
+iters<- 20
 
 #Set up code that can be run on 4 cores
 cl<-makeCluster(4)
@@ -157,10 +156,6 @@ resamp.glmm.1995.lte4 <-foreach(icount(iters), .packages = 'glmmADMB') %dopar% {
 #Stop using four cores
 print(Sys.time()-strt)
 stopCluster(cl)
-
-#resamp.dat.glmm.1995.lte4 <- read.table("dat/GLMM.1995.lte4.randeffs.txt", header = TRUE)
-resamp.glmm.1995.lte4
-
 
 #Record the number of treatments
 numTreats <- nrow(resamp.glmm.1995.lte4[[1]]$Regimen)
@@ -292,7 +287,7 @@ write.table(coefs.glm.1995.lte4.for.ttest, "../tmp/GLM.1995.lte4.fixedeffs.txt",
 ##############################
 
 #Number of iterations
-iters<- 100
+iters<- 20
 
 #Set up parallelization
 cl<-makeCluster(4)
@@ -328,14 +323,6 @@ for(i in 1:length(resamp.glmm.1995.notrunc)){
 plotnames <- rownames(resamp.glmm.1995.notrunc[[1]]$Regimen)
 colnames(resamp.dat.glmm.1995.notrunc) <- plotnames
 
-
-
-#Determine the names of the treatments
-#plotnames <- rownames(resamp.glmm.1995.notrunc[[1]]$Regimen)
-#ordered.regs <- c()
-#for(i in 1:length(ordNames)){
-#    ordered.regs[i] <- which(plotnames == ordNames[i])
-#}
 
 #Store the random effects coefficients (so it can be graphed without having to rerun everything)
 write.table(resamp.dat.glmm.1995.notrunc, "../tmp/GLMM.1995.notrunc.randeffs.txt", row.names = FALSE, col.names  = TRUE , quote = FALSE)
@@ -406,7 +393,7 @@ save(PIs.1995.notrunc, file = "../tmp/PIs.1995.notrunc")
 
 
 #Repeat this analysis to have t-tests
-iters<-400
+iters<-1000
 cl<-makeCluster(4)
 registerDoParallel(cl)
 
@@ -439,7 +426,7 @@ write.table(coefs.glm.1995.notrunc.for.ttest, "../tmp/GLM.1995.notrunc.fixedeffs
 ######################################
 
 #Number of iterations
-iters<- 100 
+iters<- 20 
 
 #Set up parallelization
 cl<-makeCluster(4)
@@ -551,7 +538,7 @@ save(PIs.all.lte4, file = "../tmp/PIs.all.lte4")
 
 #GLM, slope differences
 #Models refit so that we can do statistical tests
-iters<-400
+iters<-1000
 
 cl<-makeCluster(4)
 registerDoParallel(cl)
