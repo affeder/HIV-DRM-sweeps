@@ -32,8 +32,8 @@ lenfunc <- function(x){
     c(sum(regexpr('\\.|N', x) < 1))
 }
 
-rtlen <-  apply(ncRTseqcaps, 1, lenfunc)
-lens <- rtlen 
+lens <-  apply(ncRTseqcaps, 1, lenfunc)
+
 
 ambfunc <- function(x){
     c(sum(regexpr('\\.|N|A|T|C|G', x) < 1))
@@ -65,13 +65,9 @@ for(i in 1:length(alltreats)){
 }
 
 
-
-
 #Our list of filtered treatments are all those in which we have at least three categories with at least 5 sequences
 refs.filt <- alltreats[which(apply(numDRM.bt, 1, function(x){ c(sum(x >= 3) >=3 )}))]
 
-numDRM.bt[which(alltreats == "3TC+ABC+ATV"),]
-alltreats == "3TC+ABC+ATV"
 
 #Determine NRTI/NNRTI/etc and store it in reg.class
 reg.class <- c()

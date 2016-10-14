@@ -678,3 +678,6 @@ write.table(ncRTseqcaps, "../tmp/ncRTseqcaps.txt", row.names= FALSE, col.names =
 write.table(ncPRseqcaps, "../tmp/ncPRseqcaps.txt", row.names= FALSE, col.names = TRUE, quote = FALSE)
 
 
+
+
+

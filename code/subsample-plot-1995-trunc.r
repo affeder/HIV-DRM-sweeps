@@ -354,13 +354,14 @@ for(i in 1:length(drugnames)){
     }
 }
 
-
+allslopes <- c()
 allfits <- matrix(data = NA, nrow = nrow(resamp.dat.glmm.1995.lte4), ncol = 101)
 for(i in 1:nrow(resamp.dat.glmm.1995.lte4)){
-    fit.i <- resamp.dat.glmm.1995.lte4[i,ordered.regs[!is.na(ordered.regs)]]# + fe.glmm.1995.notrunc[i, 2]
+    fit.i <- resamp.dat.glmm.1995.lte4[i,ordered.regs[!is.na(ordered.regs)]] + fe.coef.1995.lte4[,2]
 #cbind(drugnames[-which(is.na(ordered.regs ))], colnames(fit.i))
     fit.i.lm <- lm(unlist(fit.i) ~ percentfail[-which(is.na(ordered.regs))])
     allfits[i,] <- coef(fit.i.lm)[1]+ 0:100 * coef(fit.i.lm)[2]
+    allslopes[i] <- coef(fit.i.lm)[2]
 }
 
 
@@ -381,10 +382,34 @@ rel.col[rel.col == 4] <- newPal[1]
 rel.col[rel.col == 5] <- newPal[4]
 rel.col[rel.col == 6] <- newPal[5]
 
+#CORR3
+lm(apply(allfits, 2, mean) ~ seq(0, 100, by = 1))
+testperc <- 50
+mean(allslopes)
+quantile(allslopes, c(.025, .975))
+decreaseWith3 <- mean(allfits[,80])*3
+#1.5 fewer DRMs
+#What is the average number of (1995) downsampled ambreads in the 0 DRM category?
+
+set.seed(95027)
+avgofavg <- c()
+for(j in 1:100){
+    avgnumamb <- c()
+    for(i in 1995:2013){
+        tmpambs <- dat[dat$DRMnum == 0 & dat$IsolateYear == 1995,]$ambnum
+        #warning ok here - just a scalar multiplication
+        avgnumamb <- c(avgnumamb,rpois(length(tmpambs),tmpambs* down.sample.1995(dat$IsolateYear)))
+    }
+    NumberOf0DRMs <- mean(avgnumamb)
+    avgofavg[j] <- NumberOf0DRMs
+}
+numAmbsIn0Cat <- mean(avgofavg)
+
+(numAmbsIn0Cat + decreaseWith3)/numAmbsIn0Cat
+
 
 
 pdf("../figures/F4-1995-trunc.pdf", width =6, height =5)
-#pdf("~/Desktop/elife-figs/new/F4-S3-1995-trunc.pdf", width =6, height =5)
 par(mar = c(4,4,1, 1))
 plot(percentfail, rand.effs[matched.effects], xlab = "Percentage of patients with virologic suppression after 48 weeks" , ylab =  expression(paste("Change in diversity accompanying each DRM (", Delta, "DRM)", sep = "")), type = "n", xlim = c(0, 105), ylim = c(-2, 2.2))
 #abline(lm(rand.effs[matched.effects] ~ percentfail))

@@ -6,7 +6,7 @@
 
 weight <- 1.5
 
-drminf <- read.table("~/Dropbox/HIV_softsweeps/DRM_file_WHO.txt", header = T, stringsAsFactors = F)
+drminf <- read.table("../dat/DRM_file_WHO.txt", header = T, stringsAsFactors = F)
 
 #What are the most common reverse transcriptase mutations?
 mutlist <- names(sort(table(unlist(hardDRMlist)[grep("RT", unlist(hardDRMlist))]), decreasing = T)[1:25])
@@ -127,6 +127,7 @@ for(i in 1:length(mutpos.new)){
 
 
 pdf("../figures/F2.pdf", width = 10, height = 5)
+
 layout(matrix(1:2, nrow = 1))
 par(mar = c(5,4,1,1))
 means <- meanmat[,2] - meanmat[,1]  
@@ -165,7 +166,88 @@ ses <- unlist(lapply(liststo, function(x){c(sd(x)/sqrt(length(x)))} ))
 plot(0:10, means, ylim = c(min(means - ses), max(means + ses)), xlab = "Number of DRMs", ylab = "Number of ambiguous calls", pch = 21, bg = "grey", lwd = weight)
 arrows(0:length(means), means - ses, 0:length(means), means + ses, length = 0, lwd = weight)
 text(9.85, 7.2, "B", cex = 2.5)
+
 dev.off()
+
+
+
+#CORR1
+#Comparing number of amb reads given 0 DRMs to 1+, 1 to 2+, etc
+for(i in 1:5){
+    group1 <- liststo[[i]]
+    group2 <- liststo[[i+1]]
+    for(j in (i+1):length(liststo)){
+        group2 <- c(group2, liststo[[j]])
+    }
+    print(t.test(group1, group2))
+}
+
+
+# 0 v 1+ 2.2*10-16
+# 1 v 2+ 4.3*10-13
+# 2 v 3+ 1.3*10-4
+# 3 v 4+ 9.4*10-3
+
+#Ok, trying it again without looking at the above code
+for( i in 0:5){
+    g1 <- dat[which(dat$DRMnum == i),'ambnum']
+    g2 <- dat[which(dat$DRMnum > i),'ambnum']
+    print(paste(i, " versus >", i, sep = ""))
+    print(t.test(g1, g2))
+}
+
+#Alright...
+#0 v 1+   2.2e-16
+#1 v 2+   8.206e-15
+#2 v 3+   0.05038
+#3 v 4+   0.02066
+
+#Why don't these match?
+for(i in 1:11){
+    group1 <- liststo[[i]]
+    g1 <- dat[which(dat$DRMnum == (i -1)),'ambnum']
+    print(table(group1 == g1))
+}
+
+table(dat$DRMnum)
+#Ok, so I guess actually there were two points left out - with 11 and 12 DRMs
+#Let's see if everything works out if I add those two points back in
+
+for(i in 1:5){
+    group1 <- liststo[[i]]
+    group2 <- liststo[[i+1]]
+    for(j in (i+1):length(liststo)){
+        group2 <- c(group2, liststo[[j]])
+    }
+    group2 <- c(group2, dat[dat$DRMnum >= 11, 'ambnum'] )
+    print(paste(i-1, " versus >", i-1, sep = ""))
+    print(t.test(group1, group2))
+}
+#0 v 1+   2.2e-16
+#1 v 2+   4.258e-13
+#2 v 3+   0.0001299
+#3 v 4+   0.009405
+#Ok, so those two points aren't making the difference...
+#I really don't know why those two aren't matching...
+
+t.test(liststo[[1]], liststo[[2]])
+t.test(liststo[[2]], liststo[[3]])
+t.test(liststo[[3]], liststo[[4]])
+t.test(liststo[[4]], liststo[[5]])
+
+
+for( i in 0:5){
+    g1 <- dat[which(dat$DRMnum == i),'ambnum']
+    g2 <- dat[which(dat$DRMnum == (i+1)),'ambnum']
+    print(paste(i, " versus 1+", i, sep = ""))
+    print(t.test(g1, g2))
+}
+#0 v 1   0.0007192  (-4)
+#1 v 2   1.625e-05  (-5)
+#2 v 3   0.01076    (-2)
+#3 v 4   0.00245    (-3)
+
+#Ok, these values look much more similar - maybe it's just 0 v 1, 1 v 2, 2 v 3, etc, and we wrote it incorrectly in the text
 
 
 ####################################
@@ -210,6 +292,7 @@ dev.off()
 
 pdf("../figures/F5-S1.pdf", width =12, height = 8)
 
+par(oma = c(3, 3, 0, 0))
 subs <- list()
 for(i in 1:length(drugnames)){
 length(drugnames)
@@ -223,6 +306,8 @@ for(i in 1:length(drugnames)){
     hist(subs[[i]], main = paste(drugnames[i]), breaks = seq(-.5, 10.5, by = 1))
 }
 
+mtext("Number of DRMs", side = 1, line = 1, outer = TRUE)
+mtext("Count", side = 2, line = 1, las = 0, outer = TRUE)
 dev.off()
 
 

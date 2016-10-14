@@ -97,18 +97,18 @@ fit.plot <- function(x, maintitle, AorB, AorB.x, AorB.y){
     text(AorB.x, AorB.y, AorB, cex = 2.5)
 }
 
-pdf("../figures/F5-S5.pdf", width =8, height =4.5)
-layout(matrix(1:2, nrow = 1))
-par(mar = c(4,4,3,1))
-fit.plot(poisfit.all, "Poisson Fits", "A", 45, 40)
-fit.plot(nbfit.all, "Negative Binomial Fits", "B", 45, 50)
-dev.off()
-
 pdf("../figures/F5-S4.pdf", width =8, height =4.5)
 layout(matrix(1:2, nrow = 1))
 par(mar = c(4,4,3,1))
-fit.plot(poisfit, "Poisson Fits", "A", 70, 30)
-fit.plot(nbfit, "Negative Binomial Fits", "B", 70, 38)
+fit.plot(poisfit.all, "Poisson Fits", "A", 48, 39)
+fit.plot(nbfit.all, "Negative Binomial Fits", "B", 48, 48)
+dev.off()
+
+pdf("../figures/F5-S5.pdf", width =8, height =4.5)
+layout(matrix(1:2, nrow = 1))
+par(mar = c(4,4,3,1))
+fit.plot(poisfit, "Poisson Fits", "A", 68, 34.5)
+fit.plot(nbfit, "Negative Binomial Fits", "B", 68, 44.5)
 dev.off()
 
 
@@ -272,6 +272,43 @@ print(Sys.time()-strt)
 stopCluster(cl)
 
 write.table(coefs.glm.1995.lte4.for.ttest, "../tmp/GLM.1995.lte4.fixedeffs.txt", row.names = FALSE, col.names = TRUE, quote = FALSE)
+
+colnames(coefs.glm.1995.lte4.for.ttest)
+coefs.glm.1995.lte4.for.ttest[,'NNRTI.effect']
+coefs.glm.1995.lte4.for.ttest[,'NRTI.effect']
+
+
+#CORR2
+
+#0 DRMs:
+NoDRMs.div <- coef[,'(Intercept)'] + coef[,'lens'] * 800 
+
+#1NNRTI
+OneDRM.NNRTI.div <- coef[,'(Intercept)'] + coef[,'lens'] * 800  + coef[,'NNRTI.effect']
+#OneDRM.NNRTI.div <- coef[,'(Intercept)']  + coef[,'NNRTI.effect']
+
+mean((NoDRMs.div - OneDRM.NNRTI.div)/NoDRMs.div)
+quantile((NoDRMs.div - OneDRM.NNRTI.div)/NoDRMs.div, c(.025, .975))
+
+#1NRTI
+OneDRM.NRTI.div <- coef[,'(Intercept)'] + coef[,'lens'] * 800  + coef[,'NRTI.effect']
+
+mean((NoDRMs.div - OneDRM.NRTI.div)/NoDRMs.div)
+quantile((NoDRMs.div - OneDRM.NRTI.div)/NoDRMs.div, c(.025, .975))
+
+#1PI
+OneDRM.PI.div <- coef[,'(Intercept)'] + coef[,'lens'] * 800  + coef[,'PI.effect']
+
+mean((NoDRMs.div - OneDRM.PI.div)/NoDRMs.div)
+quantile((NoDRMs.div - OneDRM.PI.div)/NoDRMs.div, c(.025, .975))
+
+
+#1PIr
+OneDRM.PIr.div <- coef[,'(Intercept)'] + coef[,'lens'] * 800  + coef[,'PIr.effect']
+
+mean((NoDRMs.div - OneDRM.PIr.div)/NoDRMs.div)
+quantile((NoDRMs.div - OneDRM.PIr.div)/NoDRMs.div, c(.025, .975))
+
 
 
 
@@ -587,6 +624,27 @@ sum(coefs.glm.1995.notrunc.for.ttest[,5]< coefs.glm.1995.notrunc.for.ttest[,6])
 sum(coefs.glm.all.lte4.for.ttest[,3]< coefs.glm.all.lte4.for.ttest[,4])
 sum(coefs.glm.all.lte4.for.ttest[,5]< coefs.glm.all.lte4.for.ttest[,6])
 
+#Table 1
+fe.1995.lte4 <- read.table("../tmp/GLMM.1995.lte4.fixedeffs.txt")
+signif(apply(fe.1995.lte4, 2, mean), 2)
+paste("(", apply(signif(apply(fe.1995.lte4, 2, quantile, c(.025, .975)), 2), 2, paste, collapse = ","), ")", sep = "")
+
+fe.1995.notrunc <- read.table("../tmp/GLMM.1995.notrunc.fixedeffs.txt")
+signif(apply(fe.1995.notrunc, 2, mean), 2)
+paste("(", apply(signif(apply(fe.1995.notrunc, 2, quantile, c(.025, .975)), 2), 2, paste, collapse = ","), ")", sep = "")
+
+fe.all.lte4 <- read.table("../tmp/GLMM.all.lte4.fixedeffs.txt")
+signif(apply(fe.all.lte4, 2, mean), 2)
+paste("(", apply(signif(apply(fe.all.lte4, 2, quantile, c(.025, .975)), 2), 2, paste, collapse = ","), ")", sep = "")
 
 
+#Table 2
+#Note, the PIr and PI order is switched from the table in the paper, but the labels are correct
+signif(apply(coefs.glm.1995.lte4.for.ttest, 2, mean), 2)
+paste("(", apply(signif(apply(coefs.glm.1995.lte4.for.ttest, 2, quantile, c(.025, .975)), 2), 2, paste, collapse = ","), ")", sep = "")
 
+signif(apply(coefs.glm.1995.notrunc.for.ttest, 2, mean), 2)
+paste("(", apply(signif(apply(coefs.glm.1995.notrunc.for.ttest, 2, quantile, c(.025, .975)), 2), 2, paste, collapse = ","), ")", sep = "")
+
+signif(apply(coefs.glm.all.lte4.for.ttest, 2, mean), 2)
+paste("(", apply(signif(apply(coefs.glm.all.lte4.for.ttest, 2, quantile, c(.025, .975)), 2), 2, paste, collapse = ","), ")", sep = "")
