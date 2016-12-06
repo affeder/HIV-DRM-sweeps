@@ -1,0 +1,18 @@
+% latex table generated in R 3.2.3 by xtable 1.8-2 package
+% Tue Dec  6 13:01:58 2016
+\begin{table}[ht]
+\centering
+\begin{tabular}{llll}
+  \hline
+   & \$alpha\_\{all\}\$  (Intercept) & \$Delta\$ (Number of DRMs) & \$gamma\$ (Length) \\ 
+  \hline
+1995+, \$leq\$ 4 DRMs & -0.78 & -0.16 & 0.003 \\ 
+   & (-0.91,-0.65) & (-0.17,-0.14) & (0.0029,0.0032) \\ 
+  1995+, all DRMs & -0.89 & -0.097 & 0.003 \\ 
+   & (-1,-0.77) & (-0.11,-0.088) & (0.0029,0.0032) \\ 
+  1989+, \$leq\$ 4 DRMs & -1.2 & -0.15 & 0.003 \\ 
+   & (-1.4,-1.1) & (-0.17,-0.14) & (0.0028,0.0032) \\ 
+   \hline
+\end{tabular}
+\end{table}
+

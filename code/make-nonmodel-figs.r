@@ -413,10 +413,32 @@ summary(lm(dat$ambig ~ dat$IsolateYear))
 #F-statistic: 2.335 on 1 and 6715 DF,  p-value: 0.1265
 
 
-#What happens if we remove the first few years?
-summary(lm(dat[dat$IsolateYear >= 1995,]$ambig ~ dat[dat$IsolateYear >= 1995,]$IsolateYear))
-#Ok, no signal. Ok, great.
+#What if we look among sequences with no DRMs?
+summary(lm(dat[dat$DRMnum == 0,]$ambig ~ dat[dat$DRMnum == 0,]$IsolateYear))
 
+
+## Call:
+## lm(formula = dat[dat$DRMnum == 0, ]$ambig ~ dat[dat$DRMnum == 
+##     0, ]$IsolateYear)
+
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.031315 -0.021243 -0.005618  0.013635  0.131508 
+
+## Coefficients:
+##                                      Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                        -1.4168609  0.2629257  -5.389 8.14e-08 ***
+## dat[dat$DRMnum == 0, ]$IsolateYear  0.0007194  0.0001312   5.483 4.85e-08 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+## Residual standard error: 0.02486 on 1608 degrees of freedom
+## Multiple R-squared:  0.01835,	Adjusted R-squared:  0.01774 
+## F-statistic: 30.06 on 1 and 1608 DF,  p-value: 4.849e-08
+
+#How many more ambiguous reads is an increase in year associated with,
+# on average, per sequence?
+0.0007 * 800
 
 #######
 ## C ##

@@ -69,7 +69,7 @@ fit2b.1995
 coefsToPrint <- rbind(fit2b, fit2b.1995)
 colnames(coefsToPrint) <- c("Intercept", "Slope (by year)")
 rownames(coefsToPrint) <- c("Relative to 1989", "Relative to 1995")
-write.table(coefsToPrint, "pthinning-coefs.txt", row.names = TRUE, col.names = TRUE)
+write.table(coefsToPrint, "../figures/pthinning-coefs.txt", row.names = TRUE, col.names = TRUE)
 
 #Setup plot F5-S3
 pdf("../figures/F5-S3.pdf", width =9, height =5)
