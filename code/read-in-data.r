@@ -186,8 +186,6 @@ tmp <- tmp2[-treat.exclude,]
 percentfail <- c()
 for(i in 1:length(drugnames)){
     drugrel <- tmp[tmp$Treatment.Name == drugnames[i],]
-    print(drugnames[i])
-    print(nrow(drugrel))
     percentfail[i] <- sum(as.numeric(drugrel$succprop), na.rm = T)/sum(as.numeric(drugrel$N), na.rm = T)
 }
 percentfail <- percentfail*100
