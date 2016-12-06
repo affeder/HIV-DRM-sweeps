@@ -1,7 +1,8 @@
 #Prep for the validation
 
 #We need to re-read in the whole dataset, because we use nonclonal reads
-all <- read.table("~/Dropbox/HIV_softsweeps/dataset.01.24.txt", skip = 13, sep= "\t", header = T)
+all <- read.table("../dat/dataset.01.24.txt", skip = 13, sep= "\t", header = T)
+
 
 #mults is all ids that are present more than once in the db
 ids <- table(all$PtID)
@@ -13,6 +14,7 @@ mults <- names(ids[which(ids > 1)])
 propambig.nu <- c()
 
 #For every position,
+
 dim(ncRTseqcaps)
 for(i in 1:ncol(ncRTseqcaps)){
 

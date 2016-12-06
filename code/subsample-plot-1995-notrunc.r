@@ -1,4 +1,5 @@
 #Subsample plot
+source("read-in-data.r")
 
 resamp.dat.glmm.1995.notrunc <- read.table("../tmp/GLMM.1995.notrunc.randeffs.txt", header = TRUE)
 fe.coef.1995.notrunc <- read.table("../tmp/GLMM.1995.notrunc.fixedeffs.txt")[,2]

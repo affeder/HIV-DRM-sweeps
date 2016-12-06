@@ -145,7 +145,9 @@ translateAmbigNA<- function(x){
     c <- helper(x[3])
 
     #If none of them are defined, toss it out
-    if(is.na(a) | is.na(b) | is.na(c)){ return(NA) }
+    if(is.na(a[1]) | is.na(b[1]) | is.na(c[1])){ return(NA) }
+    #PSP this gives a warning when a, b or c are ambiguous. I think it is not a big problem,
+    # but it is a bit annoying that the warnings pop up. 
 
     #Otherwise, translate all combinations
     toRet <- c()
@@ -189,7 +191,8 @@ listlen <- function(x){
     if(length(x) == 0){
         return(0)
     }
-    if(x == 0){
+    if(length(x) == 1 && x[1] == 0){ # PSP I was getting warnings about "the condition has length > 1 and only the first element will be used"
+        #so I changed "x == 0" into "length(x) == 1 && x[1] == 0"
         return(0)
     }
     return(length(x))
@@ -210,6 +213,9 @@ asNumeric <- function(x) as.numeric(as.character(x))
 #Read in the initial dataset to process
 #This still needs to be somewhat parsed and aligned
 dat <- read.table("../dat/dataset.01.24.txt", skip = 13, sep= "\t", header = T, stringsAsFactors = TRUE)
+
+#PSP to make all this run fast to check
+#dat<-dat[sample(1:length(dat[,1]), 2000),]
 
 #We'll need to create alignments. We're given the start and end positions of each of these sequences, but let's arrange them in matrices with missing data
 RTalign <- unlist(apply(dat, 1, alignRT))
@@ -367,8 +373,8 @@ hardDRMlist <- append(observedDRM, rep(0, nclen))
 softDRMlist <- append(observedDRM, rep(0, nclen))
 
 #We're only going to call DRMs in nonclonal sequences
-prncaa <- (praaalign[nclone,])
-ncaa <- (aaalign[nclone,])
+prncaa <- (praaalign[nclone,]) # Protease
+ncaa <- (aaalign[nclone,]) # RT
 
 #For each sequence, we're going to try to decide what DRMs are present
 for(i in 1:nclen){
@@ -488,7 +494,8 @@ for(i in 1:nclen){
 
 
 #this is a check. Let's look at an index where we think we've found a soft sweep
-softlocs <- which(unlist(lapply(softDRMlist, function(x){x != 0})) == TRUE)
+softlocs <- which(unlist(lapply(softDRMlist, function(x){x != 0})) == TRUE) # PSP these are the individuals (sequences) that have a soft sweep, right?
+#PSP softlocs sounds like sites to me. 
 ind <- softlocs[3]
 softDRMlist[[ind]]
 hardDRMlist[[ind]]
@@ -546,7 +553,7 @@ PRlen[NAS] = 0
 
 
 ambig <- (RTnumAmbig + PRnumAmbig)/(RTlen + PRlen)
-DRMnum <- hardDRMnum + softDRMnum
+
 
 #datold <- dat
 dat <- (dat[nclone,])
@@ -619,14 +626,15 @@ alltreats <- unique(dat$Regimen)
 #If any treatment is encoded just as "RTI"/"NRTI"/"NNRTI" or "PI" - we don't want to group things since we don't what they are
 treats.filt <- alltreats[(regexpr('RTI', alltreats) < 0) & (regexpr('PI', alltreats) < 0)]
 #Exclude single dose nevarapine - these patients are generally only treated once (not our study population)
-treats.filt <- treats.filt[-which(treats.filt == "NVP")]
+#PSP I added if statements here to make sure that we don't remove everything when there is nothing to remove. 
+if (length(which(treats.filt == "NVP"))>0)treats.filt <- treats.filt[-which(treats.filt == "NVP")]
 #Exclude anything with the treatment "unknown"
-treats.filt <- treats.filt[-which(regexpr("Unknown", treats.filt) >= 0)]
+if (length(which(regexpr("Unknown", treats.filt) >= 0))>0)treats.filt <- treats.filt[-which(regexpr("Unknown", treats.filt) >= 0)]
 #Remove anything treated with aAPA (experimental treatment)
-treats.filt <- treats.filt[-which(regexpr("aAPA", treats.filt) >= 0)]
+if (length(which(regexpr("aAPA", treats.filt) >= 0))>0)treats.filt <- treats.filt[-which(regexpr("aAPA", treats.filt) >= 0)]
 #Many drugs
 more.than.5.drugs <- which(unlist(lapply(strsplit(treats.filt, split = "\\+"), length) > 4))
-treats.filt <- treats.filt[-more.than.5.drugs]
+if (length(more.than.5.drugs)>0) treats.filt <- treats.filt[-more.than.5.drugs]
 
 #These are all the regimens we want to consider valid firstline therapies
 treats.filt
@@ -668,7 +676,7 @@ ncPRseqcaps <- (PRseqcaps[nclone,])[allow,]
 
 write.table(dat, "../tmp/nclonal.dat.txt", row.names= FALSE, quote = FALSE, col.names = TRUE, sep = "\t")
 
-save(hardDRMlist, file = "../tmp/hardDRMlist.txt")
+save(hardDRMlist, file = "../tmp/hardDRMlist.txt") #PSP is it correct that these are things that are not human readable? 
 save(softDRMlist, file = "../tmp/softDRMlist.txt")
 save(DRMlist, file = "../tmp/DRMlist.txt")
 

@@ -1,7 +1,8 @@
 #Subsample plot
 
+source("read-in-data.r")
+
 pdf("../figures/F3.pdf", width =6, height =6)
-#pdf("~/Desktop/elife-figs/new//F3.pdf", width =6, height =6)
 par(mar = c(3,4,.5,.5))
 layout(matrix(1:4, ncol = 2, byrow = T), widths=c(1,.65), heights=c(2,1))
 
@@ -241,10 +242,7 @@ rel.col[rel.col == 6] <- newPal[5]
 
 
 
-
-
 pdf("../figures/F4.pdf", width =6, height =5)
-#pdf("~/Desktop/elife-figs/new//F4.pdf", width =6, height =5)
 
 par(mar = c(4,4,1, 1))
 plot(percentfail, rand.effs[matched.effects], xlab = "Percentage of patients with virologic suppression after 48 weeks" , ylab =  expression(paste("Change in diversity accompanying each DRM (", Delta, "DRM)", sep = "")), type = "n", xlim = c(0, 105), ylim = c(-2, upperlim))

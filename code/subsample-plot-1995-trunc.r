@@ -1,3 +1,4 @@
+source("read-in-data.r")
 
 resamp.dat.glmm.1995.lte4 <- read.table("../tmp/GLMM.1995.lte4.randeffs.txt", header = TRUE)
 fe.coef.1995.lte4 <- read.table("../tmp/GLMM.1995.lte4.fixedeffs.txt")
@@ -382,37 +383,35 @@ rel.col[rel.col == 4] <- newPal[1]
 rel.col[rel.col == 5] <- newPal[4]
 rel.col[rel.col == 6] <- newPal[5]
 
-#CORR3
-lm(apply(allfits, 2, mean) ~ seq(0, 100, by = 1))
-testperc <- 50
-mean(allslopes)
-quantile(allslopes, c(.025, .975))
-decreaseWith3 <- mean(allfits[,80])*3
+#This is a computation that is reported in the text
+if(0 == 1){
+    lm(apply(allfits, 2, mean) ~ seq(0, 100, by = 1))
+    testperc <- 50
+    mean(allslopes)
+    quantile(allslopes, c(.025, .975))
+    decreaseWith3 <- mean(allfits[,80])*3
 #1.5 fewer DRMs
-#What is the average number of (1995) downsampled ambreads in the 0 DRM category?
-
-set.seed(95027)
-avgofavg <- c()
-for(j in 1:100){
-    avgnumamb <- c()
-    for(i in 1995:2013){
-        tmpambs <- dat[dat$DRMnum == 0 & dat$IsolateYear == 1995,]$ambnum
-        #warning ok here - just a scalar multiplication
-        avgnumamb <- c(avgnumamb,rpois(length(tmpambs),tmpambs* down.sample.1995(dat$IsolateYear)))
+#What is the average number of (1995) downsampled
+#ambreads in the 0 DRM category?
+    set.seed(95027)
+    avgofavg <- c()
+    for(j in 1:100){
+        avgnumamb <- c()
+        for(i in 1995:2013){
+            tmpambs <- dat[dat$DRMnum == 0 & dat$IsolateYear == 1995,]$ambnum
+#warning ok here - just a scalar multiplication
+            avgnumamb <- c(avgnumamb,rpois(length(tmpambs),tmpambs* down.sample.1995(dat$IsolateYear)))
+        }
+        NumberOf0DRMs <- mean(avgnumamb)
+        avgofavg[j] <- NumberOf0DRMs
     }
-    NumberOf0DRMs <- mean(avgnumamb)
-    avgofavg[j] <- NumberOf0DRMs
+    numAmbsIn0Cat <- mean(avgofavg)
+    (numAmbsIn0Cat + decreaseWith3)/numAmbsIn0Cat
 }
-numAmbsIn0Cat <- mean(avgofavg)
-
-(numAmbsIn0Cat + decreaseWith3)/numAmbsIn0Cat
-
-
 
 pdf("../figures/F4-1995-trunc.pdf", width =6, height =5)
 par(mar = c(4,4,1, 1))
 plot(percentfail, rand.effs[matched.effects], xlab = "Percentage of patients with virologic suppression after 48 weeks" , ylab =  expression(paste("Change in diversity accompanying each DRM (", Delta, "DRM)", sep = "")), type = "n", xlim = c(0, 105), ylim = c(-2, 2.2))
-#abline(lm(rand.effs[matched.effects] ~ percentfail))
 rands.perc <- rand.effs[matched.effects]
 interval <- apply(allfits, 2, quantile, c(.025, .975), na.rm = TRUE)
 polygon( c(0:100, 100:0), c(interval[1,], rev(interval[2,])), col = rgb(0,0,0,.15), border = FALSE)
