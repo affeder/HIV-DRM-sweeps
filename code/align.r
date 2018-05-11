@@ -212,7 +212,7 @@ asNumeric <- function(x) as.numeric(as.character(x))
 
 #Read in the initial dataset to process
 #This still needs to be somewhat parsed and aligned
-dat <- read.table("../dat/dataset.01.24.txt", skip = 13, sep= "\t", header = T, stringsAsFactors = TRUE)
+dat <- read.table("../dat/dataset.01.24.txt", skip = 13, sep= "\t", header = T, stringsAsFactors = FALSE)
 
 #PSP to make all this run fast to check
 #dat<-dat[sample(1:length(dat[,1]), 2000),]
